@@ -1,4 +1,4 @@
-Change PATH for your working directory
+Change PATH for your working directory inside the script
 
 st_gms.csv - Full dataset
 
