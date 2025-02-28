@@ -118,10 +118,25 @@ for(i in 1:5000) {
 revisar <- gsub("\"", "", revisar, fixed=T)
 unique(revisar)
 
+dd$num_ac <- 0
+
 for (adc in revisar) {
   dd$num_ac <- dd$num_ac + 
     as.integer(grepl(adc, dd$additional_content, fixed = TRUE))
 }
+
+#Count number of developers
+contar_desarrolladores <- function(x) {
+  # Eliminar corchetes y comillas
+  x <- gsub("^\\[|\\]$", "", x)
+  # Dividir por comillas y coma
+  desarrolladores <- strsplit(x, "', '")[[1]]
+  # Eliminar comillas restantes
+  desarrolladores <- gsub("^'|'$", "", desarrolladores)
+  # Contar el número de elementos
+  return(length(desarrolladores))
+}
+dd$num_dev <- sapply(dd$developers, contar_desarrolladores)
 
 #Save stm_gms_pub.csv or stm_gms_pub.csv
 write.csv(dd, "PATH/stm_gms_pub_prep.csv", row.names = FALSE)
