@@ -1,0 +1,11 @@
+stm_gms_pub_prep.csv:
+cat: Single-player (c22) - Steam Timeline (c61)
+gen: Adventure (c62) - Accounting (c87)
+plat: windows (c88) - linux (c90)
+num_ac: num_ac(c91)
+
+stm_gms_dev_prep.csv:
+cat: Single-player (c22) - Valve Anti-Cheat enabled (c59)
+gen: Action(c60) - Sexual Content(c86)
+plat: windows (c87) - linux (c89)
+num_ac: num_ac(c90)
