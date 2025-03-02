@@ -1,0 +1,146 @@
+---
+output: word_document
+editor_options:
+chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+# Load necessary libraries
+library(tidyverse)    # Data manipulation & visualization
+library(summarytools) # Summary statistics
+library(ggplot2)      # Advanced visualizations
+library(knitr)        # Tables formatting
+library(kableExtra)   # Improved table aesthetics
+library(corrplot)     # Correlation matrix
+library(Amelia)       # Missing values visualization
+library(caret)        # Feature selection & preprocessing
+library(randomForest) # Feature importance analysis
+
+# Set global options
+options(scipen = 999)  # Disable scientific notation
+knitr::opts_chunk$set(echo = TRUE)  # Display code in output
+```
+
+
+# ** Descriptive statistical analysis  **
+
+## Load the Data
+```{r}
+
+dataset_path <- "descriptive_statistics/games.csv"
+steam_data <- read_csv(dataset_path)
+```
+The dataset contains detailed information about Steam games, including their genres, release dates, prices, and player statistics.
+
+## Dataset Overview
+The dataset contains detailed information about Steam games, including their genres, release dates, prices, and player statistics.
+
+Display the first few rows
+```{r}
+head(steam_data)
+```
+Display the structure of the dataset
+```{r}
+str(steam_data)
+```
+Display column names
+```{r}
+names(steam_data)
+```
+Get dimensions of the dataset
+```{r}
+dim(steam_data)
+n <- dim(steam_data)[1]
+K <- dim(steam_data)[2]
+
+cat("Number of rows (games):", n, "\n")
+cat("Number of columns (features):", K, "\n")
+```
+## Exploratory Data Analysis
+
+Distribution of Numerical Variables
+```{r}
+# Select numerical columns
+numeric_cols <- steam_data %>% select(where(is.numeric))
+
+# Histogram of numerical variables
+numeric_cols %>%
+  gather() %>%
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram(bins = 30, fill = "blue", color = "black") +
+  theme_minimal() +
+  labs(title = "Distribution of Numerical Variables", x = "Value", y = "Frequency")
+```
+
+Distribution of Categorical Variables
+```{r}
+# Select categorical columns
+categorical_cols <- steam_data %>% select(where(is.character))
+
+# Bar charts for categorical features
+categorical_cols %>%
+  gather() %>%
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_bar(fill = "darkgreen", color = "black", alpha = 0.7) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Distribution of Categorical Variables",
+       x = "Category",
+       y = "Count",
+       caption = "Bar plots showing the distribution of categorical features in the dataset.")
+```
+## Correlation Analysis
+
+Correlation Matrix for Numerical Features
+```{r}
+# Compute correlation matrix
+cor_matrix <- cor(numeric_cols, use = "complete.obs")
+
+# Visualize correlations
+corrplot(cor_matrix,
+         method = "color",
+         type = "upper",
+         tl.col = "black",
+         tl.srt = 45,
+         title = "Correlation Matrix of Numerical Variables",
+         mar = c(0, 0, 1, 0))
+
+
+```
+
+## Missing Values Analysis
+```{r}
+# Visualizing missing data
+# Visualizing missing data
+missmap(steam_data,
+        main = "Missing Values Map",
+        col = c("red", "grey"),
+        legend = TRUE,
+        margins = c(10, 5))
+```
+## Summary Statistics
+
+Summary of Numerical Variables
+```{r}
+summary(numeric_cols) %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+Summary of Categorical Variables
+```{r}
+summary(categorical_cols) %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+## Conclusion
+This exploratory analysis provides a detailed overview of the Steam Games dataset. Key findings include:
+
+* The distribution of numerical and categorical variables.
+* The presence of missing values and their distribution.
+* Correlations between numerical features.
+
+Further analysis could involve predictive modeling, clustering, or deeper insights into specific features like game genres or pricing strategies.
